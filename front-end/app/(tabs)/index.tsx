@@ -4,6 +4,7 @@ import { StyleSheet, ScrollView, View, Text, TouchableOpacity } from 'react-nati
 import { useAppColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
 import { useRouter } from 'expo-router';
+import { addUser } from '@/src/services/users.service';
 
 export default function HomeScreen() {
   const colorScheme = useAppColorScheme() ?? 'light';
@@ -13,6 +14,16 @@ export default function HomeScreen() {
     // Navigate to the Explore screen
     router.push('/explore');
   };
+
+  const createUser = () => {
+    const user = {
+      name: 'John Doe',
+      email: "john.doe@fakeEmail.com",
+      age: 100,
+    }
+
+    addUser(user);
+  }
 
   return (
     <ScrollView
@@ -41,6 +52,7 @@ export default function HomeScreen() {
         style={[styles.button, { backgroundColor: Colors[colorScheme].tint }]}
         onPress={handleExplore}
       >
+        {/* onPress={handleExplore} */}
         <Text style={styles.buttonText}>Start Exploring</Text>
       </TouchableOpacity>
     </ScrollView>

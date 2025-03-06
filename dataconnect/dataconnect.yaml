@@ -1,0 +1,12 @@
+specVersion: "v1beta"
+serviceId: "great-reads"
+location: "us-east4"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "the-quill"
+      cloudSql:
+        instanceId: "the-quill-cloud"
+      # schemaValidation: "COMPATIBLE"
+connectorDirs: ["./connector"]

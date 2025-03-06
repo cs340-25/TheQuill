@@ -8,6 +8,8 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useAppColorScheme } from '@/hooks/useColorScheme';
+import { addUser } from '@/src/services/users.service';  // Adjust the relative path
+
 
 export default function TabsLayout() {
   // TS now knows colorScheme is 'light' | 'dark'
