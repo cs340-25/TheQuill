@@ -15,10 +15,10 @@ export default function HomeScreen() {
     router.push('/explore');
   };
 
-  // const handleFindBooks = () => {
-  //   // Navigate to the Explore screen
-  //   router.push("")
-  // };
+  const handleFindBooks = () => {
+    // Navigate to the Explore screen
+    router.push("/findBooks");
+  };
 
   const createUser = () => {
     const user = {
@@ -59,6 +59,13 @@ export default function HomeScreen() {
       >
         {/* onPress={handleExplore} */}
         <Text style={styles.buttonText}>Start Exploring</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.button, { backgroundColor: Colors[colorScheme].tint }]}
+        onPress={handleFindBooks}
+      >
+        {/* onPress={handleExplore} */}
+        <Text style={styles.buttonText}>Look For Books</Text>
       </TouchableOpacity>
     </ScrollView>
   );
