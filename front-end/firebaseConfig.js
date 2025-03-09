@@ -18,9 +18,6 @@ const firebaseConfig = {
 // Initialize Firebase app using the modular API
 const app = initializeApp(firebaseConfig);
 
-// Optional: Initialize Analytics
-//const analytics = getAnalytics(app);
-
 // Optional: Initialize Firestore
 const firestore = getFirestore(app);
 
