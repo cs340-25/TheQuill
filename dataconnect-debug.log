@@ -1,0 +1,61 @@
+I0306 08:39:23.806020    5196 load.go:37] Reloading schema and connectors...
+I0306 08:39:23.833304    5196 control.go:59] [/emulator/great-reads c31d] UpdateResources(): done
+Schema: sources: schema\schema.gql [2088B] 
+Connector "default": sources: connector\queries.gql [1802B] connector\mutations.gql [1233B] 
+I0306 08:39:23.843989    5196 codegen.go:82] [connector "default" javascriptSdk] Generating sources into "C:\\Users\\mgross10\\GreatReads\\dataconnect-generated\\js\\default-connector"
+I0306 08:39:23.851867    5196 collector.go:107] schema extensions wrote into "C:\\Users\\mgross10\\GreatReads\\dataconnect\\.dataconnect\\schema"
+Generated sources: prelude.gql [65582B] 
+I0306 08:39:23.853460    5196 collector.go:107] connector "default" javascriptSdk wrote into "C:\\Users\\mgross10\\GreatReads\\dataconnect-generated\\js\\default-connector"
+Generated sources: index.d.ts [246B] esm\index.esm.js [111B] esm\package.json [17B] index.cjs.js [147B] package.json [634B] README.md [2740B] 
+I0306 08:39:23.897083    5196 installsdk.go:76] Running command: C:\Program Files\nodejs\npm.cmd install file:dataconnect-generated\js\default-connector
+I0306 08:39:26.092983    5196 load.go:115] Finished reloading
+I0306 08:39:26.094027    5196 dev.go:95] Listening on address (HTTP + gRPC): 127.0.0.1:9399
+I0306 08:39:26.094027    5196 dev.go:95] Listening on address (HTTP + gRPC): [::1]:9399
+I0306 08:39:31.036395    5196 control.go:59] [/emulator/great-reads edb6] UpdateResources(): done
+Schema: sources: schema\schema.gql [2088B] 
+Connector "default": sources: connector\mutations.gql [1233B] connector\queries.gql [1802B] 
+I0306 08:43:19.893096    5196 load.go:37] Reloading schema and connectors...
+I0306 08:43:19.958269    5196 migrate.go:24] Running migration SQL:
+Step 1: CREATE TABLE "public"."user" ("id" text NOT NULL, "email" character varying(100) NOT NULL, "first_name" character varying(50) NULL, "last_name" character varying(50) NULL, "username" character varying(50) NOT NULL, PRIMARY KEY ("id"))
+I0306 08:43:20.150046    5196 control.go:59] [/emulator/great-reads edb6] UpdateResources(): done
+Schema: sources: schema\schema.gql [2348B] 
+Connector "default": sources: connector\queries.gql [1802B] connector\mutations.gql [1233B] 
+I0306 08:43:20.178604    5196 codegen.go:82] [connector "default" javascriptSdk] Generating sources into "C:\\Users\\mgross10\\GreatReads\\dataconnect-generated\\js\\default-connector"
+I0306 08:43:20.183018    5196 collector.go:107] schema extensions wrote into "C:\\Users\\mgross10\\GreatReads\\dataconnect\\.dataconnect\\schema"
+Generated sources: main\mutation.gql [3401B] prelude.gql [65582B] main\input.gql [4287B] main\relation.gql [211B] main\query.gql [1134B] 
+I0306 08:43:20.185706    5196 collector.go:107] connector "default" javascriptSdk wrote into "C:\\Users\\mgross10\\GreatReads\\dataconnect-generated\\js\\default-connector"
+Generated sources: index.cjs.js [147B] package.json [634B] README.md [2740B] index.d.ts [318B] esm\index.esm.js [111B] esm\package.json [17B] 
+I0306 08:43:20.199646    5196 installsdk.go:76] Running command: C:\Program Files\nodejs\npm.cmd install file:dataconnect-generated\js\default-connector
+I0306 08:43:23.092732    5196 load.go:115] Finished reloading
+I0306 08:45:23.096255    5196 prepare.go:115] [operation "" attempt 1] preparePlan succeeded
+I0306 08:45:23.096255    5196 prepare.go:106] [operation "" attempt 1] DBStats beforePrepare: sql.DBStats{MaxOpenConnections:1, OpenConnections:1, InUse:0, Idle:1, WaitCount:0, WaitDuration:0, MaxIdleClosed:0, MaxIdleTimeClosed:0, MaxLifetimeClosed:0}, afterPrepare: sql.DBStats{MaxOpenConnections:1, OpenConnections:1, InUse:0, Idle:1, WaitCount:0, WaitDuration:0, MaxIdleClosed:0, MaxIdleTimeClosed:0, MaxLifetimeClosed:0}
+I0306 08:45:23.103538    5196 executor.go:97] [operation "" attempt 1] DBStats beforeRun: sql.DBStats{MaxOpenConnections:1, OpenConnections:1, InUse:0, Idle:1, WaitCount:0, WaitDuration:0, MaxIdleClosed:0, MaxIdleTimeClosed:0, MaxLifetimeClosed:0}, afterRun: sql.DBStats{MaxOpenConnections:1, OpenConnections:1, InUse:0, Idle:1, WaitCount:0, WaitDuration:0, MaxIdleClosed:0, MaxIdleTimeClosed:0, MaxLifetimeClosed:0}
+I0306 08:45:23.103538    5196 engine.go:148] [/emulator/great-reads edb6] ExecuteGraphql : succeeded. 
+I0306 08:46:03.829669    5196 load.go:37] Reloading schema and connectors...
+I0306 08:46:03.995694    5196 migrate.go:24] Running migration SQL:
+Step 1: CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
+Step 2: ALTER TABLE "public"."user" ALTER COLUMN "id" TYPE uuid, ALTER COLUMN "id" SET DEFAULT uuid_generate_v4()
+E0306 08:46:04.017920    5196 service.go:82] [/emulator/great-reads edb6] failed to migrate schema: SQL migration error: failed to apply migration: failed to execute SQL migration
+step 2 modify "user" table: pq: column "id" cannot be cast automatically to type uuid
+SQL: ALTER TABLE "public"."user" ALTER COLUMN "id" TYPE uuid, ALTER COLUMN "id" SET DEFAULT uuid_generate_v4()
+Original plan:
+Step 1: CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
+Step 2: ALTER TABLE "public"."user" ALTER COLUMN "id" TYPE uuid, ALTER COLUMN "id" SET DEFAULT uuid_generate_v4()
+I0306 08:46:04.037825    5196 control.go:59] [/emulator/great-reads edb6] UpdateResources(): done
+Schema: sources: schema\schema.gql [2348B] 
+Connector "default": sources: connector\mutations.gql [1233B] connector\queries.gql [1802B] 
+I0306 08:46:04.059758    5196 codegen.go:82] [connector "default" javascriptSdk] Generating sources into "C:\\Users\\mgross10\\GreatReads\\dataconnect-generated\\js\\default-connector"
+I0306 08:46:04.070571    5196 collector.go:107] schema extensions wrote into "C:\\Users\\mgross10\\GreatReads\\dataconnect\\.dataconnect\\schema"
+Generated sources: main\relation.gql [211B] main\query.gql [1014B] main\mutation.gql [3161B] main\input.gql [4265B] prelude.gql [65582B] 
+I0306 08:46:04.073131    5196 collector.go:107] connector "default" javascriptSdk wrote into "C:\\Users\\mgross10\\GreatReads\\dataconnect-generated\\js\\default-connector"
+Generated sources: index.d.ts [322B] esm\index.esm.js [111B] esm\package.json [17B] index.cjs.js [147B] package.json [634B] README.md [2740B] 
+I0306 08:46:04.091105    5196 installsdk.go:76] Running command: C:\Program Files\nodejs\npm.cmd install file:dataconnect-generated\js\default-connector
+I0306 08:46:07.005155    5196 load.go:115] Finished reloading
+I0306 08:48:40.055629    5196 prepare.go:115] [operation "" attempt 1] preparePlan succeeded
+I0306 08:48:40.055629    5196 prepare.go:106] [operation "" attempt 1] DBStats beforePrepare: sql.DBStats{MaxOpenConnections:1, OpenConnections:1, InUse:0, Idle:1, WaitCount:0, WaitDuration:0, MaxIdleClosed:0, MaxIdleTimeClosed:0, MaxLifetimeClosed:0}, afterPrepare: sql.DBStats{MaxOpenConnections:1, OpenConnections:1, InUse:0, Idle:1, WaitCount:0, WaitDuration:0, MaxIdleClosed:0, MaxIdleTimeClosed:0, MaxLifetimeClosed:0}
+I0306 08:48:40.068055    5196 executor.go:97] [operation "" attempt 1] DBStats beforeRun: sql.DBStats{MaxOpenConnections:1, OpenConnections:1, InUse:0, Idle:1, WaitCount:0, WaitDuration:0, MaxIdleClosed:0, MaxIdleTimeClosed:0, MaxLifetimeClosed:0}, afterRun: sql.DBStats{MaxOpenConnections:1, OpenConnections:1, InUse:0, Idle:1, WaitCount:0, WaitDuration:0, MaxIdleClosed:0, MaxIdleTimeClosed:0, MaxLifetimeClosed:0}
+I0306 08:48:40.068055    5196 engine.go:148] [/emulator/great-reads edb6] ExecuteGraphql : succeeded. 
+I0306 08:50:54.028051    5196 prepare.go:115] [operation "" attempt 1] preparePlan succeeded
+I0306 08:50:54.028051    5196 prepare.go:106] [operation "" attempt 1] DBStats beforePrepare: sql.DBStats{MaxOpenConnections:1, OpenConnections:1, InUse:0, Idle:1, WaitCount:0, WaitDuration:0, MaxIdleClosed:0, MaxIdleTimeClosed:0, MaxLifetimeClosed:0}, afterPrepare: sql.DBStats{MaxOpenConnections:1, OpenConnections:1, InUse:0, Idle:1, WaitCount:0, WaitDuration:0, MaxIdleClosed:0, MaxIdleTimeClosed:0, MaxLifetimeClosed:0}
+I0306 08:50:54.034680    5196 executor.go:97] [operation "" attempt 1] DBStats beforeRun: sql.DBStats{MaxOpenConnections:1, OpenConnections:1, InUse:0, Idle:1, WaitCount:0, WaitDuration:0, MaxIdleClosed:0, MaxIdleTimeClosed:0, MaxLifetimeClosed:0}, afterRun: sql.DBStats{MaxOpenConnections:1, OpenConnections:1, InUse:0, Idle:1, WaitCount:0, WaitDuration:0, MaxIdleClosed:0, MaxIdleTimeClosed:0, MaxLifetimeClosed:0}
+I0306 08:50:54.034680    5196 engine.go:148] [/emulator/great-reads edb6] ExecuteGraphql : succeeded. 

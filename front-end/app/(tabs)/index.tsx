@@ -9,7 +9,49 @@ import GoodReadsHome from '@/blog/GoodReadsHome';
 
 
 export default function HomeScreen() {
-  return <GoodReadsHome />;
+  const colorScheme = useAppColorScheme() ?? 'light';
+  const router = useRouter();
+
+//   const handleExplore = () => {
+//     // Navigate to the Explore screen
+//     router.push('/explore');
+//   };
+
+//   const createUser = () => {
+//     const user = {
+//       name: 'John Doe',
+//       email: "john.doe@fakeEmail.com",
+//       age: 100,
+//     }
+
+//     addUser(user);
+//   }
+
+  return (
+    <GoodReadsHome />
+  );
+
+  // const colorScheme = useAppColorScheme() ?? 'light';
+  // const router = useRouter();
+
+  // const handleExplore = () => {
+  //   // Navigate to the Explore screen
+  //   router.push('/explore');
+  // };
+
+  // const handleFindBooks = () => {
+  //   // Navigate to the Explore screen
+  //   router.push("/findBooks");
+  // };
+
+  // const createUser = () => {
+  //   const user = {
+  //     name: 'John Doe',
+  //     email: "john.doe@fakeEmail.com",
+  //     age: 100,
+  //   }
+  // }
+
 }
 // export default function HomeScreen() {
 //   const colorScheme = useAppColorScheme() ?? 'light';
