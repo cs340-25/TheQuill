@@ -1,35 +1,40 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Image, StyleSheet, ScrollView, Dimensions, TextInput } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons'; // Import FontAwesome for stars
 
 const NewScreen = () => {
+
+    const [searchQuery, setSearchQuery] = useState('');
   const books = [
-    { id: '1', title: 'Book 1', imageUrl: 'https://cdn.pastemagazine.com/www/articles/2019/12/06/dunebbc19final.jpg' },
-    { id: '2', title: 'Book 2', imageUrl: 'https://cdn.pastemagazine.com/www/articles/2019/12/06/dunebbc19final.jpg' },
-    { id: '3', title: 'Book 3', imageUrl: 'https://cdn.pastemagazine.com/www/articles/2019/12/06/dunebbc19final.jpg' },
-    { id: '4', title: 'Book 4', imageUrl: 'https://cdn.pastemagazine.com/www/articles/2019/12/06/dunebbc19final.jpg' },
-    { id: '5', title: 'Book 5', imageUrl: 'https://cdn.pastemagazine.com/www/articles/2019/12/06/dunebbc19final.jpg' },
-    { id: '6', title: 'Book 6', imageUrl: 'https://cdn.pastemagazine.com/www/articles/2019/12/06/dunebbc19final.jpg' },
-    { id: '7', title: 'Book 7', imageUrl: 'https://cdn.pastemagazine.com/www/articles/2019/12/06/dunebbc19final.jpg' },
-    { id: '8', title: 'Book 8', imageUrl: 'https://cdn.pastemagazine.com/www/articles/2019/12/06/dunebbc19final.jpg' },
-    { id: '9', title: 'Book 9', imageUrl: 'https://cdn.pastemagazine.com/www/articles/2019/12/06/dunebbc19final.jpg' },
-    { id: '10', title: 'Book 10', imageUrl: 'https://cdn.pastemagazine.com/www/articles/2019/12/06/dunebbc19final.jpg' },
-    { id: '11', title: 'Book 11', imageUrl: 'https://cdn.pastemagazine.com/www/articles/2019/12/06/dunebbc19final.jpg' },
-    { id: '12', title: 'Book 12', imageUrl: 'https://cdn.pastemagazine.com/www/articles/2019/12/06/dunebbc19final.jpg' },
-    { id: '13', title: 'Book 13', imageUrl: 'https://cdn.pastemagazine.com/www/articles/2019/12/06/dunebbc19final.jpg' },
-    { id: '14', title: 'Book 14', imageUrl: 'https://cdn.pastemagazine.com/www/articles/2019/12/06/dunebbc19final.jpg' },
-    { id: '15', title: 'Book 15', imageUrl: 'https://cdn.pastemagazine.com/www/articles/2019/12/06/dunebbc19final.jpg' },
+    { id: '1', title: 'Book 1', author: 'Author A', rating: 4.5, imageUrl: 'https://cdn.pastemagazine.com/www/articles/2019/12/06/dunebbc19final.jpg' },
+    { id: '2', title: 'Book 2', author: 'Author B', rating: 3.8, imageUrl: 'https://cdn.pastemagazine.com/www/articles/2019/12/06/dunebbc19final.jpg' },
+    { id: '3', title: 'Book 3', author: 'Author C', rating: 4.2, imageUrl: 'https://cdn.pastemagazine.com/www/articles/2019/12/06/dunebbc19final.jpg' },
+    { id: '4', title: 'Book 4', author: 'Author D', rating: 5.0, imageUrl: 'https://cdn.pastemagazine.com/www/articles/2019/12/06/dunebbc19final.jpg' },
+    { id: '5', title: 'Book 5', author: 'Author E', rating: 3.5, imageUrl: 'https://cdn.pastemagazine.com/www/articles/2019/12/06/dunebbc19final.jpg' },
+    { id: '6', title: 'Book 6', author: 'Author F', rating: 4.0, imageUrl: 'https://cdn.pastemagazine.com/www/articles/2019/12/06/dunebbc19final.jpg' },
   ];
 
   const screenHeight = Dimensions.get('window').height;
 
+  const filteredBooks = books.filter((book) =>
+    book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    book.author.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <ScrollView style={styles.container}> {/* Wrap the entire content in a vertical ScrollView */}
-      {/* Main title */}
+    <ScrollView style={styles.container}>
       <View style={styles.row}>
         <Text style={styles.text}>Explore Books</Text>
       </View>
 
-      {/* Genre #1 Row */}
+      <TextInput
+        style={styles.searchBar}
+        placeholder="Search books..."
+        placeholderTextColor="gray"
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+      />
+
       <View style={styles.row}>
         <Text style={styles.genreTitle}>Genre #1</Text>
       </View>
@@ -37,12 +42,17 @@ const NewScreen = () => {
         {books.map((book) => (
           <View key={book.id} style={styles.bookContainer}>
             <Image source={{ uri: book.imageUrl }} style={[styles.bookImage, { height: screenHeight * 0.20 }]} />
-            <Text style={styles.bookTitle}>{book.title}</Text>
+            <View style={styles.textContainer}>
+              <Text style={styles.bookTitle}>{book.title}</Text>
+              <Text style={styles.bookAuthor}>{book.author}</Text>
+              <View style={styles.ratingContainer}>
+                <FontAwesome name="star" size={14} color="black" />
+                <Text style={styles.bookRating}>{book.rating.toFixed(1)}</Text>
+              </View>
+            </View>
           </View>
         ))}
       </ScrollView>
-
-      {/* Genre #2 Row */}
       <View style={styles.row}>
         <Text style={styles.genreTitle}>Genre #2</Text>
       </View>
@@ -50,12 +60,17 @@ const NewScreen = () => {
         {books.map((book) => (
           <View key={book.id} style={styles.bookContainer}>
             <Image source={{ uri: book.imageUrl }} style={[styles.bookImage, { height: screenHeight * 0.20 }]} />
-            <Text style={styles.bookTitle}>{book.title}</Text>
+            <View style={styles.textContainer}>
+              <Text style={styles.bookTitle}>{book.title}</Text>
+              <Text style={styles.bookAuthor}>{book.author}</Text>
+              <View style={styles.ratingContainer}>
+                <FontAwesome name="star" size={14} color="black" />
+                <Text style={styles.bookRating}>{book.rating.toFixed(1)}</Text>
+              </View>
+            </View>
           </View>
         ))}
       </ScrollView>
-
-      {/* Genre #3 Row */}
       <View style={styles.row}>
         <Text style={styles.genreTitle}>Genre #3</Text>
       </View>
@@ -63,7 +78,14 @@ const NewScreen = () => {
         {books.map((book) => (
           <View key={book.id} style={styles.bookContainer}>
             <Image source={{ uri: book.imageUrl }} style={[styles.bookImage, { height: screenHeight * 0.20 }]} />
-            <Text style={styles.bookTitle}>{book.title}</Text>
+            <View style={styles.textContainer}>
+              <Text style={styles.bookTitle}>{book.title}</Text>
+              <Text style={styles.bookAuthor}>{book.author}</Text>
+              <View style={styles.ratingContainer}>
+                <FontAwesome name="star" size={14} color="black" />
+                <Text style={styles.bookRating}>{book.rating.toFixed(1)}</Text>
+              </View>
+            </View>
           </View>
         ))}
       </ScrollView>
@@ -72,49 +94,74 @@ const NewScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-  },
-  row: {
-    alignItems: 'flex-start', // Align items (titles and books) to the left
-    marginBottom: 10, // Adds space below the title
-    width: '100%', // Ensures the container takes the full width
-  },
-  text: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  genreTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    textAlign: 'left', // Align text to the left
-    width: '100%', // Make sure the title takes up the full width of the container
-  },
-  booksRow: {
-    flexDirection: 'row',
-    width: '100%',
-    marginBottom: 0,
-  },
-  bookContainer: {
-    width: '8%', // Book containers take up 10% of the row width
-    backgroundColor: 'lightpink',
-    marginHorizontal: 10,
-    marginBottom: 10,
-    borderRadius: 8,
-    padding: 10,
-    alignItems: 'center',
-  },
-  bookImage: {
-    width: '100%',  // Width takes up the whole container's width
-    borderRadius: 8,  // Optional: adds rounded corners to the image
-    height: '100%',
-  },
-  bookTitle: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-});
+    container: {
+      flex: 1,
+      padding: 10,
+    },
+    searchBar: {
+      width: '100%',
+      padding: 10,
+      fontSize: 16,
+      backgroundColor: 'lightpink',
+      borderRadius: 8,
+      marginBottom: 15,
+    },
+    text: {
+        fontSize: 24,
+        fontWeight: 'bold',
+    },
+    row: {
+      alignItems: 'flex-start',
+      marginBottom: 10,
+      width: '100%',
+    },
+    genreTitle: {
+      fontSize: 22,
+      fontWeight: 'bold',
+      textAlign: 'left',
+      width: '100%',
+    },
+    booksRow: {
+      flexDirection: 'row',
+      width: '100%',
+    },
+    bookContainer: {
+      flexDirection: 'row',
+      backgroundColor: 'lightpink',
+      marginHorizontal: 10,
+      marginBottom: 10,
+      borderRadius: 8,
+      padding: 10,
+      alignItems: 'center',
+      width: 200, // Adjust width to fit text and image
+    },
+    bookImage: {
+      width: 80,
+      height: 100,
+      borderRadius: 8,
+      marginRight: 10,
+    },
+    textContainer: {
+      flex: 1,
+    },
+    bookTitle: {
+      fontSize: 14,
+      fontWeight: 'bold',
+      textAlign: 'left',
+    },
+    bookAuthor: {
+      fontSize: 12,
+      color: 'gray',
+    },
+    ratingContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginTop: 5,
+    },
+    bookRating: {
+      fontSize: 12,
+      marginLeft: 5,
+    },
+  });
 
 export default NewScreen;
