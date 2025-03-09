@@ -225,20 +225,50 @@ input Int_Filter {
   isNull: Boolean
   "Match if field is exactly equal to provided value."
   eq: Int
+  """
+  Match if field is exactly equal to the result of the provided server value
+  expression.
+  """
+  eq_expr: Int_Expr @fdc_oneOf(group: "eq")
   "Match if field is not equal to provided value."
   ne: Int
+  """
+  Match if field is not equal to the result of the provided server value
+  expression.
+  """
+  ne_expr: Int_Expr @fdc_oneOf(group: "ne")
   "Match if field value is among the provided list of values."
   in: [Int!]
   "Match if field value is not among the provided list of values."
   nin: [Int!]
   "Match if field value is greater than the provided value."
   gt: Int
+  """
+  Match if field value is greater than the result of the provided server value
+  expression.
+  """
+  gt_expr: Int_Expr @fdc_oneOf(group: "gt")
   "Match if field value is greater than or equal to the provided value."
   ge: Int
+  """
+  Match if field value is greater than or equal to the result of the provided
+  server value expression.
+  """
+  ge_expr: Int_Expr @fdc_oneOf(group: "ge")
   "Match if field value is less than the provided value."
   lt: Int
+  """
+  Match if field value is less than the result of the provided server value
+  expression.
+  """
+  lt_expr: Int_Expr @fdc_oneOf(group: "lt")
   "Match if field value is less than or equal to the provided value."
   le: Int
+  """
+  Match if field value is less than or equal to the result of the provided
+  server value expression.
+  """
+  le_expr: Int_Expr @fdc_oneOf(group: "le")
 }
 
 "Query filter criteris for `[Int!]` scalar fields."
@@ -690,6 +720,18 @@ scalar UUID_Expr
   @fdc_forbiddenAsFieldType
   @fdc_example(value: "uuidV4()", description: "Generates a new random UUID (version 4) every time.")
 
+"""
+A Common Expression Language (CEL) expression that returns a Int at runtime.
+
+**Limitation**: Currently, only a limited set of expressions are supported.
+"""
+scalar Int_Expr
+  @specifiedBy(url: "https://github.com/google/cel-spec")
+  @fdc_celExpression(returnType: "int")
+  @fdc_forbiddenAsVariableType
+  @fdc_forbiddenAsFieldType
+  @fdc_example(value: "2 * 4", description: "Evaluates to 8.")
+  @fdc_example(value: "vars.foo.size()", description: "Assuming `vars.foo` is a string, it will evaluate to the length of the string.")
 """
 A Common Expression Language (CEL) expression whose return type is unspecified.
 

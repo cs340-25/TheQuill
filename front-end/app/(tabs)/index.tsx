@@ -15,6 +15,11 @@ export default function HomeScreen() {
     router.push('/explore');
   };
 
+  // const handleFindBooks = () => {
+  //   // Navigate to the Explore screen
+  //   router.push("")
+  // };
+
   const createUser = () => {
     const user = {
       name: 'John Doe',
