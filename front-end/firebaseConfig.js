@@ -16,8 +16,13 @@ const firebaseConfig = {
   measurementId: "G-5KSBR8P1FQ"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+let app;
+let analytics;
+
+if (typeof window !== 'undefined') {
+  // Initialize Firebase only if `window` is available
+  app = initializeApp(firebaseConfig);
+  analytics = getAnalytics(app);
+}
 
 export { app, analytics };
