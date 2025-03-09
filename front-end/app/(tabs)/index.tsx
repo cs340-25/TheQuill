@@ -9,8 +9,8 @@ import GoodReadsHome from '@/blog/GoodReadsHome';
 
 
 export default function HomeScreen() {
-  const colorScheme = useAppColorScheme() ?? 'light';
-  const router = useRouter();
+  // const colorScheme = useAppColorScheme() ?? 'light';
+  // const router = useRouter();
 
 //   const handleExplore = () => {
 //     // Navigate to the Explore screen
