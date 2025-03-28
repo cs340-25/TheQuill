@@ -34,7 +34,7 @@ const BookSearch = () => {
 
   return (
     <div>
-      <h1>Search for Books</h1>
+       <h1>Search for Books</h1>  
       <input
         type="text"
         value={query}
@@ -63,7 +63,7 @@ const BookSearch = () => {
             </div>
           ))
         ) : (
-          <p>No books found</p>
+          <p></p>
         )}
       </div>
     </div>

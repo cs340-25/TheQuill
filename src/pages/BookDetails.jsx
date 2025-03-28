@@ -4,8 +4,14 @@ function BookDetails() {
   const { id } = useParams();
   return (
     <div>
-      <h1>Book Details</h1>
-      <p>Showing details for book ID: {id}</p>
+      <nav className="nav">
+      <h1 className="logo">📚 Book Finder</h1>
+      <ul className="nav-links">
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/about">About</Link></li>
+        <li><Link to="/contact">Contact</Link></li>
+      </ul>
+    </nav>
     </div>
   );
 }
