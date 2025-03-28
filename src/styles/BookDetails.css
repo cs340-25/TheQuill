@@ -1,0 +1,9 @@
+.book-info {
+    border: 2px dotted rgb(96 139 168);
+    display: flex;
+}
+
+.book-info-sec {
+    flex: 1 1 auto;
+    border: 2px dotted rgb(96 139 168);
+}
