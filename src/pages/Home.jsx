@@ -1,12 +1,13 @@
-import { Link } from "react-router-dom";
+import React from "react";
+import BookSearch from "../components/BookSearch"; // Adjust the import path if needed
 
-function Home() {
+const Home = () => {
   return (
     <div>
       <h1>Welcome to BookTracker</h1>
-      <Link to="/book/1">Go to Book 1</Link>
+      <BookSearch /> {/* Add BookSearch component here */}
     </div>
   );
-}
+};
 
 export default Home;
