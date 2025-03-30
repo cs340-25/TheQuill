@@ -54,6 +54,7 @@ function Home() {
       <h1>Welcome to BookTracker</h1>
       <Link to="/book">Book Search</Link>
       <Link to="/user/johndoe">Go to user Profile page</Link>
+      <Link to="/nav">nav</Link>
     </div>
   );
 };
