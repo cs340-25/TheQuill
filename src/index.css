@@ -1,14 +1,31 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  background-color: #fedaee;
+  border-bottom: 1px solid #ccc;
+  align-items: center;
+  gap: 60px;
 
-.home_header{
-  font-size: 25pt;
-  text-align: center;
-  height: 700px;
-  justify-content: center;
-  }
+}
 
-  .api {
-    font-size: 25pt;
-    text-align: center;
-    height: 700px;
-    justify-content: center;
-  }
+.navbar-name {
+  font-size: 34px;
+  font-family: "Georgia", serif;
+  color: #382110;
+  padding: auto;
+}
+  
+.navbar-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  font-size: 20px;
+
+}
+
+.navbar-links li a {
+  text-decoration: none;
+  color: #131212;
+  font-weight: 500;
+
+}

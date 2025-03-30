@@ -1,11 +1,11 @@
 import BookSearch from "./BookSearch"
+import NavBar from "./NavigationBar";
 
-function Header() {
-    return (
-        <div>
-            <h1>Welcome to the Book Finder App</h1>
-            <BookSearch />
-        </div>
-    );
+function Header(){
+   return(
+    <div>
+      <NavBar />
+    </div>
+   ); 
 }
 export default Header
