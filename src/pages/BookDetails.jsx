@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import DOMPurify from 'dompurify';
 import '../styles/BookDetails.css';
 
 const BookDetails = () => {
@@ -42,11 +43,18 @@ const BookDetails = () => {
 
     return (
         <div className="book-details">
-            <div className="book-info">
-                <div className='book-info-sec'></div>
-                <div className='book-info-sec'></div>
-                <div className='book-info-sec'></div>
+            <div className='section section-1'>
+                <img src={imageLinks?.thumbnail} alt={title} className='book-thumbnail' />
+                <button></button>
             </div>
+            <div className='section section-2'>
+                <h2>{title}</h2>
+                <h4>{authors?.join(', ')}</h4>
+                <p>{categories?.join(', ')}</p>
+                <p><strong>Rating:</strong> {averageRating ? `${averageRating} (${ratingsCount} ratings)` : "No ratings available"}</p>
+                <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(description) }}></p>
+            </div>
+            {/* <div className='section section-3'>3</div> */}
         </div>
     );
 };
