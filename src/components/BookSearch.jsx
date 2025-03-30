@@ -1,69 +1,62 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom'; // Import Link
 
 const BookSearch = () => {
-  const [query, setQuery] = useState('');
-  const [books, setBooks] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [query, setQuery] = useState('');  // User's search input
+  const [books, setBooks] = useState([]);  // Books fetched from the API
+  const [loading, setLoading] = useState(false); // Loading state
 
-  // Replace with your actual Google Books API key
-  const API_KEY = 'AIzaSyDR8-AriyFWv1z1SR4F5pGgX-DJBggc8AI';  // Add your API Key here
-  const API_URL = 'https://www.googleapis.com/books/v1/volumes';
-
-  const handleSearch = async () => {
-    if (!query) return;
-    
+  const handleSearch = async (e) => {
+    e.preventDefault();
     setLoading(true);
-    setError('');
-    
     try {
-      const response = await fetch(`${API_URL}?q=${query}&key=${API_KEY}`);
-      const data = await response.json();
-      
-      if (data.items) {
-        setBooks(data.items);
-      } else {
-        setError('No books found');
-      }
-    } catch (err) {
-      setError('Error fetching data');
-    } finally {
-      setLoading(false);
+      // Fetch data from Google Books API
+      const response = await axios.get('https://www.googleapis.com/books/v1/volumes', {
+        params: {
+          q: query,  // Search term (book title, author, etc.)
+        },
+      });
+      setBooks(response.data.items);  // Update the state with the fetched books
+    } catch (error) {
+      console.error('Error fetching books:', error);
     }
+    setLoading(false);
   };
 
   return (
     <div>
-       <h1>Search for Books</h1>  
-      <input
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search for books"
-      />
-      <button onClick={handleSearch}>Search</button>
-      
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      
+      <form onSubmit={handleSearch}>
+        <input
+          type="text"
+          placeholder="Search for books"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}  // Update the query as user types
+        />
+        <button type="submit" disabled={loading}>
+          {loading ? 'Loading...' : 'Search'}
+        </button>
+      </form>
+
       <div>
-        {books.length > 0 ? (
+        {books.length === 0 && !loading ? (
+          <p>No books found. Try searching again.</p>
+        ) : (
           books.map((book) => (
             <div key={book.id}>
               <h3>{book.volumeInfo.title}</h3>
-              <p>Author: {book.volumeInfo.authors?.join(', ')}</p>
-              <p>{book.volumeInfo.description}</p>
-              {book.volumeInfo.imageLinks && (
-                <img
-                  src={book.volumeInfo.imageLinks.thumbnail}
-                  alt={book.volumeInfo.title}
-                  style={{ width: '100px' }}
-                />
-              )}
+              <p>{book.volumeInfo.authors?.join(', ')}</p>
+              <img
+                src={book.volumeInfo.imageLinks?.thumbnail}
+                alt={book.volumeInfo.title}
+                style={{ width: '100px' }}
+              />
+              <br />
+              {/* Link to the BookDetails page */}
+              <Link to={`/book/${book.id}`}>View Details</Link>
             </div>
-          ))
-        ) : (
-          <p></p>
+
+>> main
         )}
       </div>
     </div>
