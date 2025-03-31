@@ -1,12 +1,61 @@
-import React from "react";
+import React, { useState } from "react";
+import { Box, Typography, Avatar, Chip, Card, CardMedia, CardContent, Stack, Button, LinearProgress, IconButton } from "@mui/material";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 const UserProfile = () => {
-    // Sample user data (Replace this with dynamic data from Firebase)
+    const [readingStatus, setReadingStatus] = useState({});
+
+    const [bookProgress, setBookProgress] = useState({
+        4: 60,
+        5: 40,
+        6: 75,
+        7: 25,
+    });
+
+    const handleStatusChange = (bookId, status) => {
+        setReadingStatus((prev) => ({ ...prev, [bookId]: status }));
+    };
+
     const user = {
-        profilePic: "https://via.placeholder.com/150", // Replace with actual image URL
+        profilePic: "https://via.placeholder.com/150",
         name: "Jane Doe",
         booksReadThisYear: 15,
         tags: ["Fantasy Lover", "Sci-Fi Enthusiast", "Book Reviewer"],
+        currentlyReading: [
+            {
+                id: 4,
+                title: "1984",
+                author: "George Orwell",
+                cover: "https://covers.openlibrary.org/b/id/8234152-L.jpg",
+                progress: 60,
+                timestamp: 1700000000,
+            },
+            {
+                id: 5,
+                title: "Brave New World",
+                author: "Aldous Huxley",
+                cover: "https://covers.openlibrary.org/b/id/8228691-L.jpg",
+                progress: 40,
+                timestamp: 1700001000,
+            },
+            {
+                id: 6,
+                title: "Fahrenheit 451",
+                author: "Ray Bradbury",
+                cover: "https://covers.openlibrary.org/b/id/11127778-L.jpg",
+                progress: 75,
+                timestamp: 1700002000,
+            },
+            {
+                id: 7,
+                title: "The Catcher in the Rye",
+                author: "J.D. Salinger",
+                cover: "https://covers.openlibrary.org/b/id/8225261-L.jpg",
+                progress: 25,
+                timestamp: 1700003000,
+            }
+        ],
         bookshelf: [
             {
                 id: 1,
@@ -26,55 +75,129 @@ const UserProfile = () => {
                 author: "Jane Austen",
                 cover: "https://covers.openlibrary.org/b/id/10546650-L.jpg",
             },
-            // Add more books here
         ],
     };
 
+    const handleProgressChange = (bookId, event) => {
+      // Calculate the new progress based on where the click happened
+      const progressBarWidth = event.target.offsetWidth;
+      const clickPosition = event.nativeEvent.offsetX;
+      const newProgress = Math.round((clickPosition / progressBarWidth) * 100);
+      
+      setBookProgress((prev) => ({ ...prev, [bookId]: newProgress }));
+  };
+
+    const sortedReading = [...user.currentlyReading].sort((a, b) => b.timestamp - a.timestamp);
+    const displayedBooks = sortedReading.slice(0, 3);
+    const showSeeAllButton = sortedReading.length > 3;
+    const widthPercentage = displayedBooks.length === 1 ? "100%" : displayedBooks.length === 2 ? "50%" : "33.3%";
+
     return (
-        <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+        <Box maxWidth={800} mx="auto" p={4} bgcolor="#fef3f2" boxShadow={5} borderRadius={3}>
             {/* Profile Section */}
-            <div className="flex flex-col items-center">
-                <img
-                    src={user.profilePic}
-                    alt="Profile"
-                    className="w-32 h-32 rounded-full border-4 border-gray-300"
-                />
-                <h2 className="text-2xl font-bold mt-4">{user.name}</h2>
-                <p className="text-gray-600">Books Read This Year: {user.booksReadThisYear}</p>
+            <Stack direction="row" alignItems="center" spacing={3}>
+              {/* Profile Picture */}
+              <Avatar 
+                  src={user.profilePic} 
+                  alt="Profile" 
+                  sx={{ width: 150, height: 150, border: "5px solid #ff8fab" }} // Made it bigger
+              />
+              {/* User Info (Name, Tags, Books Read) */}
+              <Stack spacing={1}>
+                <Typography variant="h5" fontWeight="bold" color="#d6336c">
+                    {user.name}
+                </Typography>
+                <Typography color="text.secondary">
+                    Books Read This Year: {user.booksReadThisYear}
+                </Typography>
 
                 {/* Tags Section */}
-                <div className="flex flex-wrap justify-center mt-2">
+                <Stack direction="row" spacing={1} flexWrap="wrap">
                     {user.tags.map((tag, index) => (
-                        <span
-                            key={index}
-                            className="m-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm"
-                        >
-                            {tag}
-                        </span>
+                        <Chip key={index} label={tag} color="secondary" variant="filled" />
                     ))}
-                </div>
-            </div>
+                </Stack>
+              </Stack>
+            </Stack>
+
+            <br/>
+            <Box mb={4} p={2} bgcolor="#ffe4e1" borderRadius={2}>
+            <Stack direction="row" justifyContent="space-between" alignItems="center">
+                <Typography variant="h6" fontWeight="bold">Currently Reading</Typography>
+                {showSeeAllButton && (
+                  <Button size="small" variant="contained" color="primary">
+                    See All
+                  </Button>
+                )}
+            </Stack>
+
+            <Stack direction="row" spacing={2} mt={2}>
+                {displayedBooks.map((book) => (
+                    <Card key={book.id} sx={{ width: widthPercentage, boxShadow: 3, bgcolor: "#fffaf0", p: 2, marginLeft: 2, marginBottom: 2 }}>
+                        <CardMedia component="img" image={book.cover} alt={book.title} sx={{ width: "100%", height: 150, borderRadius: 1 }} />
+                        <CardContent>
+                            <Typography variant="body1" fontWeight="bold" textAlign="center">{book.title}</Typography>
+                            <Typography variant="body2" color="text.secondary" textAlign="center">{book.author}</Typography>
+                            
+                            <div onClick={(e) => handleProgressChange(book.id, e)}>
+                                <LinearProgress
+                                    variant="determinate"
+                                    value={bookProgress[book.id]}
+                                    sx={{ mt: 1, height: 8, borderRadius: 4 }}
+                                />
+                            </div>
+
+                            <Typography variant="caption" textAlign="center">{bookProgress[book.id]}% completed</Typography>
+                        </CardContent>
+                    </Card>
+                ))}
+            </Stack>
+        </Box>
 
             {/* Bookshelf Section */}
-            <div className="mt-6">
-                <h3 className="text-lg font-semibold">My Bookshelf</h3>
-                <div className="overflow-x-auto whitespace-nowrap mt-3">
-                    <div className="flex space-x-4">
-                        {user.bookshelf.map((book) => (
-                            <div key={book.id} className="flex flex-col items-center min-w-[150px]">
-                                <img
-                                    src={book.cover}
-                                    alt={book.title}
-                                    className="w-24 h-36 object-cover rounded-md shadow-md"
-                                />
-                                <p className="text-sm font-medium mt-1 text-center">{book.title}</p>
-                                <p className="text-xs text-gray-500">{book.author}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
-        </div>
+            <Box mt={4} p={2} bgcolor="#fce4ec" borderRadius={2}>
+                <Typography variant="h6" fontWeight="bold">My Bookshelf</Typography>
+                <Stack direction="row" mt={2} overflow="auto">
+                    {user.bookshelf.map((book) => (
+                        <Card key={book.id}    
+                         sx={{ 
+                          minWidth: 150, 
+                          maxWidth: 150, 
+                          boxShadow: 3, 
+                          bgcolor: "#ffebee", 
+                          p: 1, 
+                          display: 'flex', 
+                          flexDirection: 'column', 
+                          alignItems: 'center', 
+                          justifyContent: 'space-between',
+                          mb: 2,
+                          ml: 2,
+                          mt: 2,
+                      }} >
+                      
+                      <CardMedia component="img" image={book.cover} alt={book.title} 
+                          sx={{ width: "100%", height: 200, borderRadius: 1 }} />
+                      
+                      <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+                          <Typography variant="body2" fontWeight="bold">{book.title}</Typography>
+                          <Typography variant="caption" color="text.secondary">{book.author}</Typography>
+                      </CardContent>
+                  
+                      {/* Buttons with Icons */}
+                      <Stack direction="row" spacing={1} mt={1} mb={1}>
+                          <Button variant="contained" color="primary" size="small">
+                              <MenuBookIcon /> {/* Open Book Icon */}
+                          </Button>
+                          <Button variant="contained" color="success" size="small">
+                              <CheckCircleIcon /> {/* Checkmark Icon */}
+                          </Button>
+                      </Stack>
+                  
+                  </Card>
+                    ))}
+                </Stack>
+            </Box>
+        </Box>
     );
 };
 
