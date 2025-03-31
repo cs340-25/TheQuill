@@ -62,8 +62,7 @@ const BookSearch = ({ BookQue = ''}) => {
               {/* Link to the BookDetails page */}
               <Link to={`/book/${book.id}`}>View Details</Link>
             </div>
-
->> main
+          ))
         )}
       </div>
     </div>
