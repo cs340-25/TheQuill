@@ -3,29 +3,74 @@ import { app } from "../firebase"; // Assuming you have a firebase.js where Fire
 import { UserBookType } from '../interfaces/UserBook'; // Import the type definition file
 
 const db = getDatabase(app);
-
-class UserBookService {
   // Method to add a book to a user's collection using the external bookId
-  static addBookToUser(userId, book) {
-    // Validate book structure based on UserBookType (optional, just for structure)
-    if (typeof book.id !== UserBookType.bookId || typeof book.status !== UserBookType.status) {
-      console.error("Invalid book structure");
-      return;
+class UserBookService {
+    constructor(database) {
+        this.database = database; // Assuming you're passing the Firebase database instance
+        this.userBooksRef = this.database.ref('userBooks'); // Path in the Firebase Realtime Database
     }
 
-    const userBookRef = ref(db, 'userBooks/' + userId + '/' + book.id);
-    set(userBookRef, {
-      bookId: book.id,  // External API's book ID
-      status: book.status || 'reading',  // Default to "reading" if status is not provided
-      addedAt: new Date().toISOString() // Current timestamp in ISO format
-    }).then(() => {
-      console.log('Book added successfully');
-    }).catch((error) => {
-      console.error('Error adding book:', error);
-    });
-  }
+    // Method to add a new UserBook
+    addUserBook(userId, userBook) {
+        // Ensure the userBook object follows the defined structure
+        if (
+        typeof userBook.bookId === 'number' &&
+        typeof userBook.onBookshelf === 'boolean' &&
+        typeof userBook.isReading === 'boolean' &&
+        typeof userBook.timeOfLastReadingUpdate === 'string' &&
+        typeof userBook.percentageRead === 'number' &&
+        typeof userBook.rating === 'number'
+        ) {
+        const userBookRef = this.userBooksRef.child(userId); // User-specific node
+        return userBookRef.push(userBook); // Push the UserBook to the user's collection
+        } else {
+        throw new Error('Invalid UserBook structure');
+        }
+    }
 
-  // Other methods to update or remove books can be added here
+    // Method to update a UserBook for a specific user and bookId
+    updateUserBook(userId, bookId, updatedData) {
+        const userBookRef = this.userBooksRef.child(userId);
+        
+        return userBookRef
+        .orderByChild('bookId')
+        .equalTo(bookId)
+        .once('value')
+        .then((snapshot) => {
+            if (snapshot.exists()) {
+            const bookKey = Object.keys(snapshot.val())[0]; // Get the key of the book in the database
+            return userBookRef.child(bookKey).update(updatedData);
+            } else {
+            throw new Error('UserBook with the specified bookId not found');
+            }
+        });
+    }
+
+    // Method to fetch all UserBooks for a specific user
+    getUserBooks(userId) {
+        const userBookRef = this.userBooksRef.child(userId);
+        return userBookRef.once('value').then((snapshot) => snapshot.val());
+    }
+
+    // Method to delete a UserBook (if necessary)
+    deleteUserBook(userId, bookId) {
+        const userBookRef = this.userBooksRef.child(userId);
+        
+        return userBookRef
+        .orderByChild('bookId')
+        .equalTo(bookId)
+        .once('value')
+        .then((snapshot) => {
+            if (snapshot.exists()) {
+            const bookKey = Object.keys(snapshot.val())[0];
+            return userBookRef.child(bookKey).remove();
+            } else {
+            throw new Error('UserBook with the specified bookId not found');
+            }
+        });
+    }
 }
+
+
 
 export default UserBookService;
