@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom'; // Import Link
 
+<<<<<<< Updated upstream
 const BookSearch = () => {
   const [query, setQuery] = useState('');  // User's search input
   const [books, setBooks] = useState([]);  // Books fetched from the API
@@ -23,6 +24,36 @@ const BookSearch = () => {
     }
     setLoading(false);
   };
+=======
+const BookSearch = ({ BookQue = ''}) => { 
+    const [query, setQuery] = useState(BookQue);  // User's search input
+    const [books, setBooks] = useState([]);  // Books fetched from the API
+    const [loading, setLoading] = useState(false); // Loading state
+
+    useEffect(() => { // for the mini search in the Navigation bar
+        if(BookQue) {
+            handleSearch({preventDefault: () => {} });
+        
+        }
+    }, [BookQue]);
+
+    const handleSearch = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            // Fetch data from Google Books API
+            const response = await axios.get('https://www.googleapis.com/books/v1/volumes', {
+                params: {
+                    q: query,  // Search term (book title, author, etc.)
+                },
+            });
+            setBooks(response.data.items);  // Update the state with the fetched books
+        } catch (error) {
+            console.error('Error fetching books:', error);
+        }
+        setLoading(false);
+    };
+>>>>>>> Stashed changes
 
   return (
     <div>
