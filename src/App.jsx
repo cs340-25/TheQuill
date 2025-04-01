@@ -14,14 +14,14 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<BrowseBooks />} />
         <Route path="/book/:id" element={<BookDetails />} />
         <Route path="/user/:userName" element={<UserProfile />} />
         <Route path="/book" element={<BookSearch />} />
         <Route path="/nav" element={<NavigationBar />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/search" element={<SearchPage />} />
-        <Route path="/browse" element={<BrowseBooks />} />
+        <Route path="/home" element={<Home />} />
       </Routes>
     </Router>
   );
