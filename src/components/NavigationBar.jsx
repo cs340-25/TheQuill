@@ -11,6 +11,7 @@ function NavigationBar() {
     e.preventDefault();
     console.log("Navigating with query:", miniQuery);
     navigate(`/search?q=${encodeURIComponent(miniQuery)}`);
+
   };
 
   return (
@@ -35,9 +36,11 @@ function NavigationBar() {
        <ul className="navbar-links">
         <li><Link to="/">Home</Link></li>
         <li><Link to="/my-books">My Books</Link></li>
-        <li><Link to="/friends">Friends</Link></li>
+        <li><Link to="/user/johndoe">My Profile</Link></li>
       </ul>
     </nav>
+
+
   );
 
 }
