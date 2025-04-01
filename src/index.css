@@ -5,7 +5,6 @@
   border-bottom: 1px solid #fa26ac;
   padding: 0.5rem 2rem;
   font-family: "Georgia", serif;
-  
 }
 
 .navbar-name {
@@ -39,6 +38,7 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
+
 .navbar-search button:hover {
   background-color: #6d6c6c;
 }
@@ -63,4 +63,5 @@
 .navbar-links li a:hover {
   background-color: #eaeaea;
   color: #e80980;
+
 }

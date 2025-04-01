@@ -1,3 +1,4 @@
+
 import { useNavigate, Link } from 'react-router-dom';
 import { useState } from 'react';
 
@@ -38,6 +39,7 @@ function NavigationBar() {
       </ul>
     </nav>
   );
+
 }
 
 export default NavigationBar;

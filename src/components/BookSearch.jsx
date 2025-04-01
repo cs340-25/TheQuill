@@ -14,6 +14,7 @@ const BookSearch = ({ BookQue = ''}) => {
         }
     }, [BookQue]);
 
+
     const handleSearch = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -31,42 +32,47 @@ const BookSearch = ({ BookQue = ''}) => {
         setLoading(false);
     };
 
-  return (
-    <div>
-      <form onSubmit={handleSearch}>
-        <input
-          type="text"
-          placeholder="Search for books"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}  // Update the query as user types
-        />
-        <button type="submit" disabled={loading}>
-          {loading ? 'Loading...' : 'Search'}
-        </button>
-      </form>
+    return (
+        <div>
+            <form onSubmit={handleSearch}>
+                <input
+                    type="text"
+                    placeholder="Search for books"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}  // Update the query as user types
+                />
+                <button type="submit" disabled={loading}>
+                    {loading ? 'Loading...' : 'Search'}
+                </button>
+            </form>
 
-      <div>
-        {books.length === 0 && !loading ? (
-          <p>No books found. Try searching again.</p>
-        ) : (
-          books.map((book) => (
-            <div key={book.id}>
-              <h3>{book.volumeInfo.title}</h3>
-              <p>{book.volumeInfo.authors?.join(', ')}</p>
-              <img
-                src={book.volumeInfo.imageLinks?.thumbnail}
-                alt={book.volumeInfo.title}
-                style={{ width: '100px' }}
-              />
-              <br />
-              {/* Link to the BookDetails page */}
-              <Link to={`/book/${book.id}`}>View Details</Link>
+            <div>
+                {books.length === 0 && !loading ? (
+                    <p>No books found. Try searching again.</p>
+                ) : (
+                    books.map((book) => (
+                        <div key={book.id}>
+                            <h3>{book.volumeInfo.title}</h3>
+                            <p>{book.volumeInfo.authors?.join(', ')}</p>
+                            <img
+                                src={book.volumeInfo.imageLinks?.thumbnail}
+                                alt={book.volumeInfo.title}
+                                style={{ width: '100px' }}
+                            />
+                            <br />
+                            {/* Link to the BookDetails page */}
+                            <Link to={`/book/${book.id}`}>View Details</Link>
+                        </div>
+                    ))
+                )}
             </div>
+
           ))
         )}
       </div>
     </div>
   );
+
 };
 
 export default BookSearch;
