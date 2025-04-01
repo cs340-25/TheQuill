@@ -54,6 +54,7 @@ function Home() {
       <h1>Welcome to BookTracker</h1>
       <Link to="/book/1">Go to Book 1</Link>
       <Link to="/user/johndoe">Go to user Profile page</Link>
+      <Link to="/nav">nav</Link>
 
 
     </div>

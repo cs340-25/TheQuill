@@ -1,4 +1,3 @@
-// SearchPage.jsx
 import React from "react";
 import { useSearchParams } from "react-router-dom";
 import BookSearch from "../components/BookSearch";
