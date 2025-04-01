@@ -55,6 +55,8 @@ function Home() {
       <Link to="/book">Book Search</Link>
       <Link to="/user/johndoe">Go to user Profile page</Link>
       <Link to="/nav">nav</Link>
+      <br/>
+      <Link to="/browse">Browse Books</Link>
     </div>
   );
 };
