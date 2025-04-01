@@ -4,6 +4,7 @@ import BookDetails from "./pages/BookDetails";
 import UserProfile from "./pages/UserProfile";
 import NavigationBar from "./components/NavigationBar";
 import BookSearch from "./components/BookSearch";
+import SignUp from './pages/SignUp';
 
 import SearchPage from "./pages/SearchPage";
 import BrowseBooks from "./pages/Browse";
@@ -18,9 +19,9 @@ function App() {
         <Route path="/user/:userName" element={<UserProfile />} />
         <Route path="/book" element={<BookSearch />} />
         <Route path="/nav" element={<NavigationBar />} />
+        <Route path="/signup" element={<SignUp />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/browse" element={<BrowseBooks />} />
-
       </Routes>
     </Router>
   );
