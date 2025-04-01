@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom'; // Import Link
 
-const BookSearch = () => {
-    const [query, setQuery] = useState('');  // User's search input
+const BookSearch = ({ BookQue = ''}) => { 
+    const [query, setQuery] = useState(BookQue);  // User's search input
     const [books, setBooks] = useState([]);  // Books fetched from the API
     const [loading, setLoading] = useState(false); // Loading state
+
+    useEffect(() => { // for the mini search in the Navigation bar
+        if(BookQue) {
+            handleSearch({preventDefault: () => {} });
+        
+        }
+    }, [BookQue]);
+
 
     const handleSearch = async (e) => {
         e.preventDefault();
@@ -58,8 +66,13 @@ const BookSearch = () => {
                     ))
                 )}
             </div>
-        </div>
-    );
+
+          ))
+        )}
+      </div>
+    </div>
+  );
+
 };
 
 export default BookSearch;
