@@ -1,23 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom'; // Import Link
+import { Link } from 'react-router-dom';
 
-const BookSearch = () => {
-    const [query, setQuery] = useState('');  // User's search input
-    const [books, setBooks] = useState([]);  // Books fetched from the API
-    const [loading, setLoading] = useState(false); // Loading state
+const BookSearch = ({ BookQue = '' }) => {
+    const [query, setQuery] = useState(BookQue);
+    const [books, setBooks] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (BookQue) {
+            handleSearch({ preventDefault: () => {} });
+        }
+    }, [BookQue]);
 
     const handleSearch = async (e) => {
         e.preventDefault();
         setLoading(true);
         try {
-            // Fetch data from Google Books API
             const response = await axios.get('https://www.googleapis.com/books/v1/volumes', {
                 params: {
-                    q: query,  // Search term (book title, author, etc.)
+                    q: query,
                 },
             });
-            setBooks(response.data.items);  // Update the state with the fetched books
+            setBooks(response.data.items || []);
         } catch (error) {
             console.error('Error fetching books:', error);
         }
@@ -31,7 +36,7 @@ const BookSearch = () => {
                     type="text"
                     placeholder="Search for books"
                     value={query}
-                    onChange={(e) => setQuery(e.target.value)}  // Update the query as user types
+                    onChange={(e) => setQuery(e.target.value)}
                 />
                 <button type="submit" disabled={loading}>
                     {loading ? 'Loading...' : 'Search'}
@@ -52,7 +57,6 @@ const BookSearch = () => {
                                 style={{ width: '100px' }}
                             />
                             <br />
-                            {/* Link to the BookDetails page */}
                             <Link to={`/book/${book.id}`}>View Details</Link>
                         </div>
                     ))
