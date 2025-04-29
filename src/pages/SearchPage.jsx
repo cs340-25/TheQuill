@@ -17,7 +17,7 @@ const SearchPage = () => {
                 const response = await axios.get('https://www.googleapis.com/books/v1/volumes', {
                     params: { 
                         q: bookQue,
-                        key: "AIzaSyDR8-AriyFWv1z1SR4F5pGgX-DJBggc8AI"  
+                        key:'AIzaSyDs1eqf3fQFfSzpBUXJYgHHLNqm7QV47k8'  
                     },
                 });
                 setSearchResults(response.data.items || []);
