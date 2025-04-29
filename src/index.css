@@ -61,7 +61,95 @@
 }
 
 .navbar-links li a:hover {
-  background-color: #eaeaea;
+  background-color: #ffbad9;
   color: #e80980;
 
 }
+
+
+/* make nav links with icons line up nicely */
+.navbar-links li a {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;      /* space between icon + text */
+}
+
+/* optional: color the icons same as link text */
+.navbar-links li a .nav-icon {
+  color: inherit;
+}
+
+
+.navbar-avatar-wrapper {
+  position: relative;
+  margin-left: 1rem;
+}
+
+.avatar-image {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.2s;
+}
+.avatar-image:hover {
+  border-color: #ff3abd;
+}
+
+.avatar-picker {
+  position: absolute;
+  top: 40px;      
+  right: 0;
+  background: #fff;
+  padding: 0.5rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  border-radius: 8px;
+  z-index: 10;
+}
+
+.avatar-scroll {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 0.5rem;
+  max-height: 200px;     
+  overflow-y: auto;     
+  padding: 0.5rem;
+}
+
+
+.avatar-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+  flex: 0 0 auto;
+  border: 2px solid transparent;
+  transition: border-color 0.2s;
+}
+.avatar-thumb:hover {
+  border-color: #ff52df;
+}
+
+.avatar-upload-btn {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px dashed #070707;
+  background: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+.avatar-upload-btn:hover {
+  background-color: #f0f0f0;
+  border-color: #ffb0c9;
+}
+
+
