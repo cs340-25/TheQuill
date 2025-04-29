@@ -16,6 +16,7 @@ import { styled } from '@mui/material/styles';
 import AppTheme from '../../muiStuff/AppTheme';
 import ColorModeSelect from '../../muiStuff/ColorModeSelect';
 import { GoogleIcon, FacebookIcon, SitemarkIcon } from '../../muiStuff/CustomIcons';
+import { createUser } from '../services/userService'; // Adjust the import path as necessary
 
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -105,18 +106,38 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
     return isValid;
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); // Always prevent default first
+    console.log('handleSubmit called');
+  
+    const data = new FormData(event.currentTarget);
+  
+    const user = {
+      name: data.get('name') as string,
+      lastName: data.get('lastName') as string,
+      email: data.get('email') as string,
+      password: data.get('password') as string,
+    };
+  
+    // Validate local form errors
     if (nameError || emailError || passwordError) {
-      event.preventDefault();
+      console.log("Validation error");
       return;
     }
-    const data = new FormData(event.currentTarget);
-    console.log({
-      name: data.get('name'),
-      lastName: data.get('lastName'),
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+  
+    try {
+      // Call your createUser function
+      const userId = await createUser(user);
+      console.log("User created successfully with ID:", userId);
+  
+      // Optionally, you can redirect the user, show a success message, clear the form, etc.
+      // Example:
+      // navigate('/success');
+    } catch (error: any) {
+      console.error("Error creating user:", error.message);
+      // Optionally display error to user, like:
+      // setErrorMessage(error.message);
+    }
   };
 
   return (
