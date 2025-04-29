@@ -8,6 +8,7 @@ import SignUp from './pages/SignUp';
 
 import SearchPage from "./pages/SearchPage";
 import BrowseBooks from "./pages/Browse";
+import SignIn from "./pages/SignIn";
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/signin" element={<SignIn />} />
       </Routes>
     </Router>
   );
