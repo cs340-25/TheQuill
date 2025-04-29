@@ -3,8 +3,13 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import DOMPurify from 'dompurify';
 import {
-    Container, Paper, Typography, CircularProgress, Box, Card, CardMedia, FormControl, InputLabel, Select, MenuItem
+    Container, Paper, Typography, CircularProgress, Box, Card, CardMedia,
+    FormControl, InputLabel, Select, MenuItem, Button
 } from '@mui/material';
+
+import { getDatabase, ref, set } from "firebase/database";
+import { getAuth } from "firebase/auth"; // to get current user
+
 import '../styles/BookDetails.css';
 
 const BookDetails = () => {
@@ -21,7 +26,7 @@ const BookDetails = () => {
                 setBook(response.data);
             } catch (error) {
                 console.error('Error fetching book details:', error);
-                setBook(null); // Explicitly set to null on error
+                setBook(null);
             } finally {
                 setLoading(false);
             }
@@ -66,6 +71,37 @@ const BookDetails = () => {
         setReadingStatus(event.target.value);
     };
 
+    const saveBook = () => {
+        const db = getDatabase();
+        const auth = getAuth();
+        const user = auth.currentUser;
+
+        if (!user) {
+            console.error("No user signed in.");
+            return;
+        }
+
+        const userId = user.uid;
+
+        const bookData = {
+            title,
+            authors,
+            thumbnail: imageUrl,
+            status: readingStatus,
+            bookId: id
+        };
+
+        const statusKey = readingStatus.replace(/\s+/g, ''); // Remove spaces for path
+
+        set(ref(db, `users/${userId}/books/${statusKey}/${id}`), bookData)
+            .then(() => {
+                console.log('Book saved successfully!');
+            })
+            .catch((error) => {
+                console.error('Error saving book:', error);
+            });
+    };
+
     return (
         <Container maxWidth="lg" className="container">
             <Paper elevation={4} className="paper">
@@ -80,7 +116,7 @@ const BookDetails = () => {
                         </Card>
                     </Box>
 
-                    <Box className="status-section">
+                    <Box className="status-section" sx={{ mt: 2 }}>
                         <FormControl fullWidth>
                             <InputLabel id="reading-status-label">Status</InputLabel>
                             <Select
@@ -95,6 +131,15 @@ const BookDetails = () => {
                                 <MenuItem value="Read">Read</MenuItem>
                             </Select>
                         </FormControl>
+
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={saveBook}
+                            sx={{ mt: 2 }}
+                        >
+                            Save Book
+                        </Button>
                     </Box>
                 </Box>
 
@@ -119,7 +164,11 @@ const BookDetails = () => {
                         variant="body1"
                         className="description"
                         dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(description) }}
-                    />
+                    /> 
+
+                    <br />
+                    <br />
+                    <br />
                 </Box>
             </Paper>
         </Container>
