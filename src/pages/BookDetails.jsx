@@ -2,14 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import DOMPurify from 'dompurify';
-import {
-    Container, Paper, Typography, CircularProgress, Box, Card, CardMedia,
-    FormControl, InputLabel, Select, MenuItem, Button
-} from '@mui/material';
-
+import { Container, Paper, Typography, CircularProgress, Box, Card, CardMedia, FormControl, InputLabel, Select, MenuItem, Button } from '@mui/material';
 import { getDatabase, ref, set } from "firebase/database";
-import { getAuth } from "firebase/auth"; // to get current user
-
+import { getAuth } from "firebase/auth";
 import '../styles/BookDetails.css';
 
 const BookDetails = () => {
@@ -17,20 +12,64 @@ const BookDetails = () => {
     const [book, setBook] = useState(null);
     const [loading, setLoading] = useState(true);
     const [readingStatus, setReadingStatus] = useState('To Be Read');
+    const [coverImage, setCoverImage] = useState(null);
+
+    const fetchGoogleBooksCover = async (title) => {
+        try {
+            const response = await axios.get(`https://www.googleapis.com/books/v1/volumes?q=intitle:${title}`);
+            const book = response.data.items?.[0];
+            if (book && book.volumeInfo?.imageLinks?.extraLarge) {
+                return book.volumeInfo.imageLinks.extraLarge;
+            } else if (book && book.volumeInfo?.imageLinks?.large) {
+                return book.volumeInfo.imageLinks.large;
+            }
+            return null;
+        } catch (error) {
+            console.error('Error fetching from Google Books API:', error);
+            return null;
+        }
+    };
+
+    const fetchOpenLibraryCover = async (title) => {
+        try {
+            const response = await fetch(`https://openlibrary.org/search.json?title=${title}`);
+            const data = await response.json();
+            const coverId = data.docs[0]?.cover_i;
+            if (coverId) {
+                return `https://covers.openlibrary.org/b/id/${coverId}-L.jpg`;
+            }
+            return null;
+        } catch (error) {
+            console.error('Error fetching from Open Library API:', error);
+            return null;
+        }
+    };
+
+    const fetchBookDetails = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.get(`https://www.googleapis.com/books/v1/volumes/${id}`);
+            const bookData = response.data;
+            setBook(bookData);
+            const title = bookData.volumeInfo?.title;
+
+            // Fetch cover image from Google Books or Open Library
+            const googleCover = await fetchGoogleBooksCover(title);
+            if (googleCover) {
+                setCoverImage(googleCover);
+            } else {
+                const openLibraryCover = await fetchOpenLibraryCover(title);
+                setCoverImage(openLibraryCover);
+            }
+        } catch (error) {
+            console.error('Error fetching book details:', error);
+            setBook(null);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchBookDetails = async () => {
-            setLoading(true);
-            try {
-                const response = await axios.get(`https://www.googleapis.com/books/v1/volumes/${id}`);
-                setBook(response.data);
-            } catch (error) {
-                console.error('Error fetching book details:', error);
-                setBook(null);
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchBookDetails();
     }, [id]);
 
@@ -55,7 +94,6 @@ const BookDetails = () => {
         title = "No Title Available",
         authors = ["Unknown Author"],
         description = "No description available.",
-        imageLinks,
         publishedDate,
         publisher = "Unknown Publisher",
         pageCount,
@@ -64,8 +102,6 @@ const BookDetails = () => {
         ratingsCount,
         language,
     } = volumeInfo;
-
-    const imageUrl = imageLinks?.large || imageLinks?.thumbnail || "https://via.placeholder.com/300x450?text=No+Cover";
 
     const handleStatusChange = (event) => {
         setReadingStatus(event.target.value);
@@ -86,7 +122,7 @@ const BookDetails = () => {
         const bookData = {
             title,
             authors,
-            thumbnail: imageUrl,
+            thumbnail: coverImage,
             status: readingStatus,
             bookId: id
         };
@@ -110,8 +146,9 @@ const BookDetails = () => {
                         <Card className="book-cover">
                             <CardMedia
                                 component="img"
-                                image={imageUrl}
+                                image={coverImage || "https://via.placeholder.com/300x450?text=No+Cover"}
                                 alt={title}
+                                sx={{ width: '100%', height: 'auto' }}
                             />
                         </Card>
                     </Box>
