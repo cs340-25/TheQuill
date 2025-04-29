@@ -18,6 +18,7 @@ import AppTheme from '../../muiStuff/AppTheme';
 import { GoogleIcon, FacebookIcon, SitemarkIcon } from '../../muiStuff/CustomIcons';
 import { getUserByEmailAndPassword } from '../services/userService'; // adjust path as needed
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../contexts/userContext'; // adjust path as needed
 
 
 
@@ -82,6 +83,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     setOpen(false);
   };
 
+  const { login } = useUser();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!validateInputs()) return;
@@ -95,6 +97,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       if (user) {
         console.log('Signed in as:', user);
         // Redirect, store session, or update context
+        login(user);
         navigate('/');
       } else {
         alert('Invalid email or password.');
