@@ -31,7 +31,7 @@ const SearchPage = () => {
 
     return (
         <>
-        <NavigationBar/>
+        
         <Container>
             <Typography variant="h4" fontWeight="bold" mt={3} mb={2} sx={{ color: '#d81b60' }}>
                 Search Results for "{bookQue}"

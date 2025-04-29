@@ -16,6 +16,10 @@ import { styled } from '@mui/material/styles';
 // import ForgotPassword from './components/ForgotPassword';
 import AppTheme from '../../muiStuff/AppTheme';
 import { GoogleIcon, FacebookIcon, SitemarkIcon } from '../../muiStuff/CustomIcons';
+import { getUserByEmailAndPassword } from '../services/userService'; // adjust path as needed
+import { useNavigate } from 'react-router-dom';
+
+
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -25,6 +29,8 @@ const Card = styled(MuiCard)(({ theme }) => ({
   padding: theme.spacing(4),
   gap: theme.spacing(2),
   margin: 'auto',
+  maxHeight: '90vh', // Added to limit height
+  overflowY: 'auto', // Added to enable vertical scroll
   [theme.breakpoints.up('sm')]: {
     maxWidth: '450px',
   },
@@ -35,6 +41,7 @@ const Card = styled(MuiCard)(({ theme }) => ({
       'hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px',
   }),
 }));
+
 
 const SignInContainer = styled(Stack)(({ theme }) => ({
   height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
@@ -65,6 +72,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -74,17 +82,29 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     setOpen(false);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (emailError || passwordError) {
-      event.preventDefault();
-      return;
-    }
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!validateInputs()) return;
+  
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const email = data.get('email') as string;
+    const password = data.get('password') as string;
+  
+    try {
+      const user = await getUserByEmailAndPassword(email, password);
+      if (user) {
+        console.log('Signed in as:', user);
+        // Redirect, store session, or update context
+        navigate('/');
+      } else {
+        alert('Invalid email or password.');
+      }
+    } catch (error) {
+      console.error('Sign-in error:', error);
+      alert('An error occurred while signing in.');
+    }
   };
+  
 
   const validateInputs = () => {
     const email = document.getElementById('email') as HTMLInputElement;
@@ -185,7 +205,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
             >
               Sign in
             </Button>
-            <Link
+            {/* <Link
               component="button"
               type="button"
               onClick={handleClickOpen}
@@ -193,11 +213,11 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               sx={{ alignSelf: 'center' }}
             >
               Forgot your password?
-            </Link>
+            </Link> */}
           </Box>
-          <Divider>or</Divider>
+          {/* <Divider>or</Divider> */}
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <Button
+            {/* <Button
               fullWidth
               variant="outlined"
               onClick={() => alert('Sign in with Google')}
@@ -212,11 +232,11 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               startIcon={<FacebookIcon />}
             >
               Sign in with Facebook
-            </Button>
+            </Button> */}
             <Typography sx={{ textAlign: 'center' }}>
               Don&apos;t have an account?{' '}
               <Link
-                href="/material-ui/getting-started/templates/sign-in/"
+                href="/signup"
                 variant="body2"
                 sx={{ alignSelf: 'center' }}
               >

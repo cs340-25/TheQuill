@@ -38,3 +38,21 @@ export const checkEmailExists = async (email) => {
   }
   return false;
 };
+
+// Find user by email and password
+export const getUserByEmailAndPassword = async (email, password) => {
+  const db = getDatabase();
+  const snapshot = await get(ref(db, 'users'));
+
+  if (snapshot.exists()) {
+    const users = snapshot.val();
+    for (let userId in users) {
+      const user = users[userId];
+      if (user.email === email && user.password === password) {
+        return { ...user, id: userId };
+      }
+    }
+  }
+  return null;
+};
+
