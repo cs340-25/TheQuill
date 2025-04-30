@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import DOMPurify from 'dompurify';
-import { Container, Paper, Typography, CircularProgress, Box, Card, CardMedia, FormControl, InputLabel, Select, MenuItem, Button } from '@mui/material';
+import { Container, Paper, Typography, CircularProgress, Box, Card, CardMedia, FormControl, InputLabel, Select, MenuItem, Button, Alert } from '@mui/material';
 import { getDatabase, ref, set } from "firebase/database";
-import { getAuth } from "firebase/auth";
 import '../styles/BookDetails.css';
+import { useUser } from '../contexts/userContext';
 
 const BookDetails = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [book, setBook] = useState(null);
     const [loading, setLoading] = useState(true);
     const [readingStatus, setReadingStatus] = useState('To Be Read');
     const [coverImage, setCoverImage] = useState(null);
+    const [alertMessage, setAlertMessage] = useState(null);
+    const [successMessage, setSuccessMessage] = useState(null);
 
     const fetchGoogleBooksCover = async (title) => {
         try {
@@ -53,7 +56,6 @@ const BookDetails = () => {
             setBook(bookData);
             const title = bookData.volumeInfo?.title;
 
-            // Fetch cover image from Google Books or Open Library
             const googleCover = await fetchGoogleBooksCover(title);
             if (googleCover) {
                 setCoverImage(googleCover);
@@ -73,6 +75,51 @@ const BookDetails = () => {
         fetchBookDetails();
     }, [id]);
 
+    const handleStatusChange = (event) => {
+        setReadingStatus(event.target.value);
+    };
+
+    const { user } = useUser(); // place this near the top of your component
+
+    const saveBook = async () => {
+        if (!user) {
+            setAlertMessage('You need to be signed in to save a book. Redirecting to signin page . . .');
+            setTimeout(() => {
+                navigate('/signin');
+            }, 3000);
+            return;
+        }
+    
+        const db = getDatabase();
+        const userId = user.id;
+    
+        const bookData = {
+            title,
+            authors,
+            thumbnail: coverImage,
+            status: readingStatus,
+            bookId: id,
+        };
+    
+        const statusKey = readingStatus.replace(/\s+/g, '');
+    
+        try {
+            const statusKeys = ['ToBeRead', 'Reading', 'Read'].filter(key => key !== statusKey);
+    
+            for (const key of statusKeys) {
+                await set(ref(db, `users/${userId}/books/${key}/${id}`), null);
+            }
+    
+            await set(ref(db, `users/${userId}/books/${statusKey}/${id}`), bookData);
+            setAlertMessage(null);
+            setSuccessMessage(`Book status updated to "${readingStatus}".`);
+
+            setTimeout(() => setSuccessMessage(null), 3000);
+        } catch (error) {
+            console.error('Error saving book:', error);
+        }
+    };
+    
     if (loading) {
         return (
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}>
@@ -102,41 +149,6 @@ const BookDetails = () => {
         ratingsCount,
         language,
     } = volumeInfo;
-
-    const handleStatusChange = (event) => {
-        setReadingStatus(event.target.value);
-    };
-
-    const saveBook = () => {
-        const db = getDatabase();
-        const auth = getAuth();
-        const user = auth.currentUser;
-
-        if (!user) {
-            console.error("No user signed in.");
-            return;
-        }
-
-        const userId = user.uid;
-
-        const bookData = {
-            title,
-            authors,
-            thumbnail: coverImage,
-            status: readingStatus,
-            bookId: id
-        };
-
-        const statusKey = readingStatus.replace(/\s+/g, ''); // Remove spaces for path
-
-        set(ref(db, `users/${userId}/books/${statusKey}/${id}`), bookData)
-            .then(() => {
-                console.log('Book saved successfully!');
-            })
-            .catch((error) => {
-                console.error('Error saving book:', error);
-            });
-    };
 
     return (
         <Container maxWidth="lg" className="container">
@@ -208,6 +220,18 @@ const BookDetails = () => {
                     <br />
                 </Box>
             </Paper>
+
+            {alertMessage && (
+                <Alert severity="error" sx={{ mt: 3 }}>
+                    {alertMessage}
+                </Alert>
+            )}
+
+            {successMessage && (
+                <Alert severity="success" sx={{ mt: 2 }}>
+                    {successMessage}
+                </Alert>
+            )}
         </Container>
     );
 };
