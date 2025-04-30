@@ -84,9 +84,9 @@ function NavigationBar() {
   return (
     <AppBar position="static" sx={{ bgcolor: '#ec4899' }}>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
-        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-          GreatReads
-        </Typography>
+      <Button color="inherit" component={Link} to="/" sx={{ textTransform: 'none', fontSize: 24 }}>
+            Great Reads
+          </Button>
 
         <Box component="form" onSubmit={handleMiniSearch} sx={{ mx: 2, width: 300 }}>
           <TextField
