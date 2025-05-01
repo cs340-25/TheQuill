@@ -144,7 +144,12 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       <SignInContainer direction="column" justifyContent="center" alignItems="center">
         <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
         <Card variant="outlined">
-          <Typography component="h1" variant="h4" sx={{ fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}>
+          {/* <SitemarkIcon /> */}
+          <Typography
+            component="h1"
+            variant="h4"
+            sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
+          >
             Sign in
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -177,8 +182,17 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                 fullWidth
               />
             </FormControl>
-            <FormControlLabel control={<Checkbox value="remember" />} label="Remember me" />
-            <Button type="submit" fullWidth variant="contained" onClick={validateInputs}>
+            {/* <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            /> */}
+          {/* <ForgotPassword open={open} handleClose={handleClose} /> */}
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              onClick={validateInputs}
+            >
               Sign in
             </Button>
           </Box>

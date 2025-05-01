@@ -17,6 +17,8 @@ import AppTheme from '../../muiStuff/AppTheme';
 import ColorModeSelect from '../../muiStuff/ColorModeSelect';
 import { GoogleIcon, FacebookIcon, SitemarkIcon } from '../../muiStuff/CustomIcons';
 import { createUser } from '../services/userService'; // Adjust the import path as necessary
+import { useNavigate } from 'react-router-dom';
+import { useUser } from '../contexts/userContext';
 
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -27,6 +29,8 @@ const Card = styled(MuiCard)(({ theme }) => ({
   padding: theme.spacing(4),
   gap: theme.spacing(2),
   margin: 'auto',
+  maxHeight: '90vh', // Added to limit height
+  overflowY: 'auto', // Added to enable vertical scroll
   boxShadow:
     'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
   [theme.breakpoints.up('sm')]: {
@@ -68,6 +72,8 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [nameError, setNameError] = React.useState(false);
   const [nameErrorMessage, setNameErrorMessage] = React.useState('');
+  const navigate = useNavigate();
+  const { login } = useUser();
 
   const validateInputs = () => {
     const email = document.getElementById('email') as HTMLInputElement;
@@ -125,11 +131,18 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       return;
     }
   
+
     try {
       // Call your createUser function
       const userId = await createUser(user);
       console.log("User created successfully with ID:", userId);
-  
+      const loginUser = {
+        id: userId,
+        email: user.email,
+        name: user.name,
+      }
+      login(loginUser); // Update the context with the new user
+      navigate('/');
       // Optionally, you can redirect the user, show a success message, clear the form, etc.
       // Example:
       // navigate('/success');
@@ -146,6 +159,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
       <SignUpContainer direction="column" justifyContent="space-between">
         <Card variant="outlined">
+          {/* <SitemarkIcon /> */}
           <Typography
             component="h1"
             variant="h4"
@@ -203,10 +217,10 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                 color={passwordError ? 'error' : 'primary'}
               />
             </FormControl>
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox value="allowExtraEmails" color="primary" />}
               label="I want to receive updates via email."
-            />
+            /> */}
             <Button
               type="submit"
               fullWidth
@@ -216,11 +230,11 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
               Sign up
             </Button>
           </Box>
-          <Divider>
+          {/* <Divider>
             <Typography sx={{ color: 'text.secondary' }}>or</Typography>
-          </Divider>
+          </Divider> */}
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <Button
+            {/* <Button
               fullWidth
               variant="outlined"
               onClick={() => alert('Sign up with Google')}
@@ -235,11 +249,11 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
               startIcon={<FacebookIcon />}
             >
               Sign up with Facebook
-            </Button>
+            </Button> */}
             <Typography sx={{ textAlign: 'center' }}>
               Already have an account?{' '}
               <Link
-                href="/material-ui/getting-started/templates/sign-in/"
+                href="/signin"
                 variant="body2"
                 sx={{ alignSelf: 'center' }}
               >
