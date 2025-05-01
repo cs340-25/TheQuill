@@ -9,6 +9,7 @@ import SignUp from "./pages/SignUp";
 import SearchPage from "./pages/SearchPage";
 import BrowseBooks from "./pages/Browse";
 import SignIn from "./pages/SignIn";
+import MyBooks from "./pages/MyBooks";
 
 function AppLayout() {
   const location = useLocation();
@@ -26,6 +27,7 @@ function AppLayout() {
         <Route path="/search" element={<SearchPage />} />
         <Route path="/home" element={<Home />} />
         <Route path="/signin" element={<SignIn />} />
+        <Route path="/mybooks" element={<MyBooks/>} />
       </Routes>
     </>
   );

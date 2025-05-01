@@ -56,3 +56,13 @@ export const getUserByEmailAndPassword = async (email, password) => {
   return null;
 };
 
+export const getUserById = async (userId) => {
+  const db = getDatabase();
+  const snapshot = await get(ref(db, `users/${userId}`));
+
+  if (snapshot.exists()) {
+    return { ...snapshot.val(), id: userId };
+  }
+  return null;
+}
+
