@@ -79,7 +79,7 @@ const BookDetails = () => {
         setReadingStatus(event.target.value);
     };
 
-    const { user } = useUser(); // place this near the top of your component
+    const { user } = useUser();
 
     const saveBook = async () => {
         if (!user) {
@@ -104,20 +104,29 @@ const BookDetails = () => {
         const statusKey = readingStatus.replace(/\s+/g, '');
     
         try {
+            const updatedAt = new Date().toISOString();
             const statusKeys = ['ToBeRead', 'Reading', 'Read'].filter(key => key !== statusKey);
-    
+        
             for (const key of statusKeys) {
                 await set(ref(db, `users/${userId}/books/${key}/${id}`), null);
             }
-    
-            await set(ref(db, `users/${userId}/books/${statusKey}/${id}`), bookData);
+        
+            const updatedBookData = {
+                ...bookData,
+                updatedAt,
+            };
+        
+            await set(ref(db, `users/${userId}/books/${statusKey}/${id}`), updatedBookData);
+            
             setAlertMessage(null);
             setSuccessMessage(`Book status updated to "${readingStatus}".`);
-
+        
             setTimeout(() => setSuccessMessage(null), 3000);
+        
         } catch (error) {
             console.error('Error saving book:', error);
         }
+        
     };
     
     if (loading) {

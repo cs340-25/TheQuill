@@ -113,7 +113,7 @@ function NavigationBar() {
           <Button color="inherit" component={Link} to="/" sx={{ textTransform: 'none' }}>
             Home
           </Button>
-          <Button color="inherit" component={Link} to="/my-books" sx={{ textTransform: 'none' }}>
+          <Button color="inherit" component={Link} to="/mybooks" sx={{ textTransform: 'none' }}>
             My Books
           </Button>
           {user ? (
