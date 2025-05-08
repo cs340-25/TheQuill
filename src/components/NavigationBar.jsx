@@ -1,5 +1,8 @@
 import { useNavigate, Link } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
+import { ref, update, get } from 'firebase/database';
+import { db } from '../firebase'; // adjust path if needed
+
 import {
   AppBar,
   Toolbar,
@@ -14,8 +17,7 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import UploadIcon from '@mui/icons-material/Upload';
-import { useUser } from '../contexts/userContext'; // adjust path if needed
-
+import { useUser } from '../contexts/userContext';
 
 const DEFAULT_AVATAR = '/images/default-avatar.png';
 const PRESET_AVATARS = [
@@ -36,57 +38,66 @@ function NavigationBar() {
   const [anchorEl, setAnchorEl] = useState(null);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
+  const { user } = useUser();
 
+  // Load avatar from Realtime Database when user logs in or changes
   useEffect(() => {
-    const savedAvatar = localStorage.getItem('userAvatar');
-    if (savedAvatar) {
-      setAvatarSrc(savedAvatar);
-    }
-  }, []);
+    if (!user?.id) return;
+    get(ref(db, `users/${user.id}`))
+      .then((snapshot) => {
+        const data = snapshot.val() || {};
+        if (data.avatar) {
+          setAvatarSrc(data.avatar);
+        }
+      })
+      .catch((err) => console.error('Error loading avatar:', err));
+  }, [user]);
 
   const handleMiniSearch = (e) => {
     e.preventDefault();
     navigate(`/search?q=${encodeURIComponent(miniQuery)}`);
   };
 
-  const { user } = useUser();
-
-  useEffect(() => {
-    if (user) {
-      console.log('User exists:', user);
-    } else {
-      console.log('No user logged in');
-    }
-  }, [user]);
-
   const openFilePicker = () => fileInputRef.current?.click();
+
+  // Upload custom avatar and save to Realtime Database
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file || !user?.id) return;
 
     const reader = new FileReader();
     reader.onload = () => {
-      setAvatarSrc(reader.result);
-      localStorage.setItem('userAvatar', reader.result);
+      const base64 = reader.result;
+      setAvatarSrc(base64);
       setAnchorEl(null);
+
+      update(ref(db, `users/${user.id}`), { avatar: base64 })
+        .then(() => console.log('Uploaded avatar saved to Firebase'))
+        .catch((error) => console.error('Error saving avatar:', error));
     };
     reader.readAsDataURL(file);
   };
 
+  // Select preset avatar and save to Realtime Database
+  const selectPreset = (url) => {
+    if (!user?.id) return;
+    setAvatarSrc(url);
+    setAnchorEl(null);
+
+    update(ref(db, `users/${user.id}`), { avatar: url })
+      .then(() => console.log('Preset avatar saved to Firebase'))
+      .catch((error) => console.error('Error saving avatar:', error));
+  };
+
   const handleAvatarClick = (event) => setAnchorEl(event.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
-  const selectPreset = (url) => {
-    setAvatarSrc(url);
-    localStorage.setItem('userAvatar', url);
-    setAnchorEl(null);
-  };
 
   return (
     <AppBar position="static" sx={{ bgcolor: '#ec4899' }}>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
-      <Button color="inherit" component={Link} to="/" sx={{ textTransform: 'none', fontSize: 24 }}>
-            Great Reads
-          </Button>
+        <Button color="inherit" component={Link} to="/" sx={{ textTransform: 'none', fontSize: 24 }}>
+          Great Reads
+        </Button>
 
         <Box component="form" onSubmit={handleMiniSearch} sx={{ mx: 2, width: 300 }}>
           <TextField
@@ -121,7 +132,7 @@ function NavigationBar() {
               <Button
                 color="inherit"
                 component={Link}
-                to={`/user/${user.id}`} // or username if available
+                to={`/user/${user.id}`}
                 sx={{ textTransform: 'none' }}
               >
                 My Profile
@@ -141,7 +152,6 @@ function NavigationBar() {
               Sign In
             </Button>
           )}
-
 
           <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
             <Box sx={{ px: 2, py: 1, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1 }}>
@@ -170,3 +180,4 @@ function NavigationBar() {
 }
 
 export default NavigationBar;
+
